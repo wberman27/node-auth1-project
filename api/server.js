@@ -3,6 +3,8 @@ const helmet = require("helmet");
 const cors = require("cors");
 const session = require('express-session')
 const KnexSessionsStore = require('connect-session-knex')(session)
+const usersRouter = require('./users/users-router')
+const authRouter = require('./auth/auth-router')
 /**
   Do what needs to be done to support sessions with the `express-session` package!
   To respect users' privacy, do NOT send them a cookie unless they log in.
@@ -17,10 +19,11 @@ const KnexSessionsStore = require('connect-session-knex')(session)
  */
 
 const server = express();
-
+server.use('/api/users', usersRouter)
+server.use('/api/auth', authRouter)
 //cookie and session config
 server.use(session({
-  name: 'Panda',
+  name: 'chocolatechip',
   secret: 'One Ring, to Rule Them All.',
   cookie: {
     maxAge: 1000 * 60 * 30,
