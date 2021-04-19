@@ -1,7 +1,8 @@
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
-
+const session = require('express-session')
+const KnexSessionsStore = require('connect-session-knex')(session)
 /**
   Do what needs to be done to support sessions with the `express-session` package!
   To respect users' privacy, do NOT send them a cookie unless they log in.
@@ -16,6 +17,26 @@ const cors = require("cors");
  */
 
 const server = express();
+
+//cookie and session config
+server.use(session({
+  name: 'Panda',
+  secret: 'One Ring, to Rule Them All.',
+  cookie: {
+    maxAge: 1000 * 60 * 30,
+    secure: false,
+    httpOnly: false
+  },
+  resave: false,
+  saveUninitialized: false,
+  store: new KnexSessionsStore({
+    knex: require('../data/db-config'),
+    tablename: 'sessions',
+    sidfieldname: 'sid',
+    createTable: true,
+    clearInterval: 1000 * 60 * 30
+  })
+}))
 
 server.use(helmet());
 server.use(express.json());
