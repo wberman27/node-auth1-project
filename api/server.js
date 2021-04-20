@@ -19,8 +19,7 @@ const authRouter = require('./auth/auth-router')
  */
 
 const server = express();
-server.use('/api/users', usersRouter)
-server.use('/api/auth', authRouter)
+
 //cookie and session config
 server.use(session({
   name: 'chocolatechip',
@@ -41,6 +40,8 @@ server.use(session({
   })
 }))
 
+server.use('/api/users', usersRouter) //these must be below the session config
+server.use('/api/auth', authRouter)
 server.use(helmet());
 server.use(express.json());
 server.use(cors());

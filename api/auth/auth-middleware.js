@@ -27,7 +27,10 @@ async function checkUsernameFree(req,res,next) {
   try{
     let usernames = []
     const user = await Users.find()
-    user.map(u => {usernames.push(u.username)})
+    user.map(u => {
+      usernames.push(u.username)
+      return usernames;
+    })
     if(usernames.includes(req.body.username)){
       next({message: "Username taken", status: 422})
     }else{
