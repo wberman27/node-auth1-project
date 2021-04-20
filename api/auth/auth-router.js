@@ -30,15 +30,17 @@ router.post('/login', checkUsernameExists, async (req, res, next)=>{
 })
 
 router.get('/logout', (req, res, next)=>{
-  if(req.session.user){
-    req.session.destroy(err=>{
-      if(err){
-        next({message: "no session", status:200})
-      }else{
-        next({message: "logged out", status:200})
-      }
-    })
-  }
+    if(req.session.user){
+      req.session.destroy(err=>{
+        if(err){
+          next({message: "no session", status:200})
+        }else{
+          next({message: "logged out", status:200})
+        }
+      })
+    }else{
+      next({message: "no session", status:200})
+    }
 })
 // Require `checkUsernameFree`, `checkUsernameExists` and `checkPasswordLength`
 // middleware functions from `auth-middleware.js`. You will need them here!
