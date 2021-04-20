@@ -14,8 +14,31 @@ router.post('/register', checkUsernameFree, checkPasswordLength, async (req, res
   }catch{
     next()
   }
+})
 
+router.post('/login', checkUsernameExists, async (req, res, next)=>{
+  const {username, password} = req.body
 
+  const [user] = await Users.findBy({username})
+
+  if(user && bcrypt.compareSync(password, user.password)){
+    req.session.user = user;
+    res.json({message: `Welcome ${username}!`})
+  }else{
+    next({message: "Invalid credentials", status:401})
+  }
+})
+
+router.get('/logout', (req, res, next)=>{
+  if(req.session.user){
+    req.session.destroy(err=>{
+      if(err){
+        next({message: "no session", status:200})
+      }else{
+        next({message: "logged out", status:200})
+      }
+    })
+  }
 })
 // Require `checkUsernameFree`, `checkUsernameExists` and `checkPasswordLength`
 // middleware functions from `auth-middleware.js`. You will need them here!
