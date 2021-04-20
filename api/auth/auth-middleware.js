@@ -25,13 +25,13 @@ function restricted(req, res, next) {
 */
 async function checkUsernameFree(req,res,next) {
   try{
-    let usernames = []
+    let usersArray = []
     const user = await Users.find()
     user.map(u => {
-      usernames.push(u.username)
-      return usernames;
+      usersArray.push(u.username)
+      return usersArray;
     })
-    if(usernames.includes(req.body.username)){
+    if(usersArray.includes(req.body.username)){
       next({message: "Username taken", status: 422})
     }else{
       next()
@@ -51,7 +51,7 @@ async function checkUsernameFree(req,res,next) {
 */
 async function checkUsernameExists(req, res, next) {
   try{
-    const user = await Users.findById(req.params.id)
+    const user = await Users.findBy({username: req.body.username})
     if(!user){
       next({message: "Invalid credentials", status: 401})
     }else{
